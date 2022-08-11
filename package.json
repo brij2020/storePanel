@@ -4,7 +4,7 @@
   "description": "custome admin panel theeme in react ",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode development --entry ./src/index.js -o build",
+    "build": "webpack --mode development --entry ./src/index.js -o build",
     "devx": "webpack-dev-server  --mode development  ",
     "bundle-report": "webpack-bundle-analyzer --port 4200 build/stats.json",
     "test": "echo \"Error: no test specified\" && exit 1"

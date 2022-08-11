@@ -5,6 +5,8 @@ import { updateInventory }  from '../store/Slices/updateInventory.slice'
 import { useQuery } from '../Hooks'
 import Table from '../Components/Table'
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from '../REST_API_END_POINT';
+
 import axios from 'axios'
 const InvoiceTrack  = () => {
 	const dispatch = useDispatch();
@@ -33,7 +35,7 @@ const InvoiceTrack  = () => {
 		dispatch(updateInventory(serverDataX))
 		.then(response => {
 			
-			axios.post('http://localhost:3001/store/store-update-invoice',{ invoiceData: invoiveOb.list })
+			axios.post(`${API_BASE_URL}/store/store-update-invoice`,{ invoiceData: invoiveOb.list })
 			.then(res => {console.log('updated');
 				navigate('/inventory')
 			})
