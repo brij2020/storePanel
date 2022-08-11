@@ -1,13 +1,17 @@
-var path = require('path');
-var express = require('express');
 
-var app = express();
-// app.use(express.static('public'));
-app.set('port', process.env.PORT || 8080);
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/build/index.html')
-});
+const express = require('express');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000
+app.use(express.static(path.join(__dirname, 'build')));
 
-var server = app.listen(app.get('port'), function() {
+app.get("*", (req, res) => {
+ res.sendFile(path.join(__dirname, "build", "index.html"));
+
+})
+
+  
+
+var server = app.listen(PORT, function() {
   console.log('listening on port ', server.address().port);
 });

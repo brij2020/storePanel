@@ -32,7 +32,7 @@ console.log('loader',loader)
 			<div class="container-fluid d-flex justify-content-between align-items-center">
 			<div class="brand-logo">
 				<a href="login.html">
-					<img src="vendors/images/deskapp-logo.svg" alt="" />
+					<img src="assets/vendors/images/deskapp-logo.svg" alt="" />
 				</a>
 			</div>
 			<div class="login-menu">
@@ -46,7 +46,7 @@ console.log('loader',loader)
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md-6 col-lg-7">
-					<img src="vendors/images/login-page-img.png" alt="" />
+					<img src="assets/vendors/images/login-page-img.png" alt="" />
 				</div>
 				<div class="col-md-6 col-lg-5">
 					<div class="login-box bg-white box-shadow border-radius-10">
@@ -58,13 +58,13 @@ console.log('loader',loader)
 								<div class="btn-group btn-group-toggle" data-toggle="buttons">
 									<label class="btn active">
 										<input type="radio" name="options" id="admin" />
-										<div class="icon"><img src="vendors/images/briefcase.svg" class="svg" alt="" /></div>
+										<div class="icon"><img src="assets/vendors/images/briefcase.svg" class="svg" alt="" /></div>
 										<span>I'm</span>
 										Manager
 									</label>
 									<label class="btn">
 										<input type="radio" name="options" id="user" />
-										<div class="icon"><img src="vendors/images/person.svg" class="svg" alt="" /></div>
+										<div class="icon"><img src="assets/vendors/images/person.svg" class="svg" alt="" /></div>
 										<span>I'm</span>
 										Employee
 									</label>

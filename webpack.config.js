@@ -4,7 +4,7 @@ const HtmlWebPackPlugin = require( 'html-webpack-plugin' );
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-
+const CopyPlugin = require("copy-webpack-plugin");
 const { inspect } = require('node:util');
 module.exports = (args) => {
     return {
@@ -18,12 +18,12 @@ module.exports = (args) => {
             devServer: {
                 open: true,
                 port: 3000, 
-                historyApiFallback:true,
+                historyApiFallback:true
             },
 	        module: {
                 rules: [
                  {
-                    test: /\.jpe?g|png$/,
+                    test: /\.(jpe?g|png|gif|svg)$/i,
                     exclude: /node_modules/,
                     use: ["url-loader", "file-loader"]
                 },
@@ -36,6 +36,7 @@ module.exports = (args) => {
                         test: /.s?css$/,
                         use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
                       },
+                      
                 ],
                  
                 },
@@ -58,7 +59,12 @@ module.exports = (args) => {
                 generateStatsFile: true,
                 statsOptions: { source: false }
               }),
-              new MiniCssExtractPlugin()
+              new MiniCssExtractPlugin(),
+              new CopyPlugin({
+              patterns: [
+                { from: "public/assets", to: "assets" }
+              ],
+            }),
             ]
         }
 };
