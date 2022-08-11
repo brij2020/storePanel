@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "custome admin panel theeme in react ",
   "main": "index.js",
+  "engines" : { 
+    "npm" : "8.12.1",
+    "node" : "14.18.0"
+  },
   "scripts": {
     "build": "webpack --mode development --entry ./src/index.js -o build",
     "devx": "webpack-dev-server  --mode development  ",
