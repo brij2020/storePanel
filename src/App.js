@@ -16,7 +16,7 @@ import Inventry from './Screens/Inventry'
 import ManageInventory from './Screens/ManageInventory';
 import GenerateInvoice from './Screens/InvoiceGenerate';
 import PrintInvoice from './Screens/PrintInvoice'
-const TrackInvoice = React.lazy(() => import('./Screens/InvoiceTrack'))
+import TrackInvoice from './Screens/InvoiceTrack'
 const InvoiceManagment = React.lazy(() => import('./Screens/InvoiceManagment'))
 
 
@@ -36,7 +36,7 @@ const App = (props) => {
 						<Route exact={ true } path='/edit-inventory' element={<ManageInventory />} />
 						<Route exact={ true } path='/generate-invoice' element={ <GenerateInvoice />} />
 						<Route exact={ true } path='/print-invoice' element={ <PrintInvoice />} />
-						<Route exact={ true } path='/track-invoice' element={ <TrackInvoice />} /> 
+						<Route path='/track-invoice' element={ <TrackInvoice />} /> 
 						<Route exact={ true } path='/sell-product' element={ <InvoiceManagment />} /> 
 						//InvoiceManagment
 

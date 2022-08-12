@@ -35,12 +35,6 @@ const PrintInvoice = (props) => {
 		console.log('grantTotal', grantTotal)
 	}
 	 const printInvoiceDoc = () => {
-	 	let printDiv = document.getElementById('invoice-print').innerHTML;
-	 	let originalContent = document.body.innerHTML;
-	 	document.body.innerHTML = printDiv;
-	 	document.title = `${customerName}-${new Date()}`;
-	 	document.getElementById('print-invoce').style.opacity = -1
-	 	setUpdateInventroy(true);
 	 	const  invoiceList = { 
 	 	products: toPrintProducts,
 	 	list:[
@@ -51,10 +45,27 @@ const PrintInvoice = (props) => {
 		"UniteSold":soldUnit,	
 		"TotalAmountPaid": grantTotal,
 		"Status": "pending"
-		}]
-	}
+		}]}
+	//  	let printDiv = document.getElementById('invoice-print').innerHTML;
+	//  	let originalContent = document.body.innerHTML;
+	//  	document.body.innerHTML = printDiv;
+	//  	document.title = `${customerName}-${new Date()}`;
+	//  	document.getElementById('print-invoce').style.opacity = -1
+	//  	setUpdateInventroy(true);
+	//  	const  invoiceList = { 
+	//  	products: toPrintProducts,
+	//  	list:[
+	//  	{ "InvoiceId": '',
+	// 	"CunsumerName": customerName,	
+	// 	"CunsumerMobile": mobile,
+	// 	"CunsumerAdd": address,	
+	// 	"UniteSold":soldUnit,	
+	// 	"TotalAmountPaid": grantTotal,
+	// 	"Status": "pending"
+	// 	}]
+	// }
 	 	window.print();
-	 	 document.location.href = `/track-invoice?invoiceinfo=${btoa(JSON.stringify(invoiceList))}`
+	 	 navigate(`/track-invoice?invoiceinfo=${btoa(JSON.stringify(invoiceList))}`)
 	  	// useNavigate(`/track-invoice?invoiceinfo=${btoa(invoiceList)}`)
 
 	 	//document.body.innerHTML = originalContent;
