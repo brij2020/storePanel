@@ -1,6 +1,6 @@
 // const API_BASE_URL = 'http://localhost:3001';
-// const API_BASE_URL = 'https://store-pi.onrender.com'
-const API_BASE_URL = 'https://web-store-pan.herokuapp.com'
+const API_BASE_URL = 'https://store-pi.onrender.com'
+// const API_BASE_URL = 'https://web-store-pan.herokuapp.com'
 const API_KEY = '';
 const API_END_POINT = {
 	LOGIN:"users/login",
