@@ -7,7 +7,10 @@ import InventryReducer  from './Slices/Inventory.slice'
 import  UpdateInventory from './Slices/updateInventory.slice'
 import SearchReducer  from "./Slices/search.slice"
 import getAllInvoiceReducer  from "./Slices/getInvoice.slice"
-
+import getALlCategoryReducer  from "./Slices/categoryList.slice"
+import CategoryDetailSlice  from "./Slices/categoryDetail.slice"
+import updateCatgorySlice  from "./Slices/categoryDetail.slice"
+import deleteCatgorySlice from "./Slices/categoryDelete.slice"
 const combinedReducers = {
 	testReducer, 
 	authReducer,
@@ -16,7 +19,11 @@ const combinedReducers = {
 	InventryReducer,
 	UpdateInventory,
 	SearchReducer,
-	getAllInvoiceReducer
+	getAllInvoiceReducer,
+	getALlCategoryReducer,
+	CategoryDetailSlice,
+	updateCatgorySlice,
+	deleteCatgorySlice
 }
 
 export default combinedReducers

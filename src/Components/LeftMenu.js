@@ -15,19 +15,19 @@ const menu = [
 		id:"home_1"
 	},
 	{
-		mainMenuText: "Inventory",
+		mainMenuText: "Manage Category",
 		link:"",
 		isOpen: false,
 		icon:'dw dw-truck',
 		Child:[
 			{
-				mainMenuText: "Manage Inventory",
-				link:"/edit-inventory",
+				mainMenuText: "Add Category",
+				link:"/category",
 				key:"IN-SUB987899"
 			},
 			{
-				mainMenuText: "Inventory",
-				link:"/inventory",
+				mainMenuText: "Category List",
+				link:"/category-list",
 				key:"IN-SUB2271331"
 			}
 		],
@@ -35,25 +35,25 @@ const menu = [
 		id:"inven_1"
 	},
 	{
-		mainMenuText: "Invoice",
+		mainMenuText: "Manage Product",
 		link:"",
 		isOpen: false,
 		icon:'dw  dw-money',
 		Child:[
 			{
-				mainMenuText: "Generate Invoice",
-				link:"/generate-invoice",
-				key:"INVOI-SUB9879967"
+				mainMenuText: "Add Products",
+				link:"/product-add",
+				key:"PRO-SUB92239967"
 			},
 			
 			{
-				mainMenuText: "Sell Products",
-				link:"/sell-product",
-				key:"INVOI-SUB78434"
+				mainMenuText: "All Products",
+				link:"/product-list",
+				key:"PRO90I-SUB78434"
 			}
 		],
 		key:"INVO0908KLI",
-		id:"invoice_1"
+		id:"product_1"
 	}
 ]
 export default menu;

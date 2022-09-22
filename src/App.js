@@ -17,7 +17,10 @@ import ManageInventory from './Screens/ManageInventory';
 import GenerateInvoice from './Screens/InvoiceGenerate';
 import PrintInvoice from './Screens/PrintInvoice'
 import TrackInvoice from './Screens/InvoiceTrack'
-const InvoiceManagment = React.lazy(() => import('./Screens/InvoiceManagment'))
+const InvoiceManagment = React.lazy(() => import('./Screens/InvoiceManagment'));
+const CategoryManagement  = React.lazy(() => import('./Screens/CategoryScreen'));
+const CategoryList  = React.lazy(() => import('./Screens/CategoryListScreen'));
+const ProductScreen = React.lazy(() => import('./Screens/ProductScreen'));
 
 
 const App = (props) => {
@@ -33,12 +36,14 @@ const App = (props) => {
 					<Routes> 
 						<Route exact ={ true } path='/' element={<Home />} />
 						<Route exact={ true } path='/inventory' element={<Inventry />} />
+						<Route exact={ true } path='/category-list' element={<CategoryList />} />
 						<Route exact={ true } path='/edit-inventory' element={<ManageInventory />} />
 						<Route exact={ true } path='/generate-invoice' element={ <GenerateInvoice />} />
 						<Route exact={ true } path='/print-invoice' element={ <PrintInvoice />} />
 						<Route path='/track-invoice' element={ <TrackInvoice />} /> 
 						<Route exact={ true } path='/sell-product' element={ <InvoiceManagment />} /> 
-						//InvoiceManagment
+						<Route exact={ true } path="/category" element={<CategoryManagement />} />
+						<Route exact={ true } path="/product-add" element={<ProductScreen />} />
 
 					</Routes>
 				</BrowserRouter>

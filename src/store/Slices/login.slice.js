@@ -5,8 +5,9 @@ export const loginAction = createAsyncThunk(
 	'user/loginAction',
 	async (data) => {
 		console.log('data', data )
+		
 		const response  = await axios.post(`${API_BASE_URL}/${API_END_POINT.LOGIN}`, data)
-	
+		console.log('response', response)
 		return response;
 
 	}
@@ -35,9 +36,10 @@ const userSilce = createSlice({
 		})
 		builder
 		.addCase(loginAction.fulfilled, (state,{ payload }) => {
+			console.log('payload', payload)
 			state.loader = false;
-			state.user = payload.data.token
-			setLocalUser(payload.data.token)
+			state.user = payload.data.user_token.token
+			setLocalUser(payload.data.user_token.token)
 		})
 		builder
 		.addCase(loginAction.rejected,(state,action) => {
