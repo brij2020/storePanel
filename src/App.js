@@ -17,7 +17,7 @@ import ManageInventory from './Screens/ManageInventory';
 import GenerateInvoice from './Screens/InvoiceGenerate';
 import PrintInvoice from './Screens/PrintInvoice'
 import TrackInvoice from './Screens/InvoiceTrack'
-import Loader from './Components/Loader'
+
 const InvoiceManagment = React.lazy(() => import('./Screens/InvoiceManagment'));
 const CategoryManagement  = React.lazy(() => import('./Screens/CategoryScreen'));
 const CategoryList  = React.lazy(() => import('./Screens/CategoryListScreen'));
