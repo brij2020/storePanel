@@ -5,16 +5,24 @@ import { updateCategory } from '../store/Slices/updateCategory.slice'
 import { getCategoryDetail } from '../store/Slices/categoryDetail.slice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import Select from 'react-select'
 const Category = () => {
+
+	const filterKeys = [{value:"brand", label:"brand"},{value:"ptype", label:"ptype"},{value:"series", label:"series"},
+	{value:"chipset", label:"chipset"},{value:"generation", label:"generation"},{value:"socketType", label:"socketType"}
+	,{value:"screenSize", label:"screenSize"},{value:"memorySupprot", label:"memorySupprot"},{value:"capacity",label:"capacity"}]
+
 	const location = useLocation();
 	let queryParams = new URLSearchParams(location.search);
+	const [allowedFilter, setAllowedFilter] = React.useState(filterKeys)
 	let catID =  queryParams.get('edit-id');
 	let isDetailPage =  queryParams.get('detailpage');
 	const list = useSelector(s => s.getALlCategoryReducer.list);
 	let detail = useSelector(s => s.CategoryDetailSlice.detail);
 	const  naviGate = useNavigate()
 	const navigation = [{id:"23",title:"Home", link:'/'},{id:"231",title:"Category", link:'/category'}];
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 	
 
 	if(typeof list !== 'undefined'  && Array.isArray(list) && list.length > 0 && typeof catID !== 'undefined') {
@@ -56,11 +64,19 @@ const Category = () => {
 		const [buttonText, setButtonText] = React.useState('Create Category')
 		const handleChange = ({target:{ name, value}}) => {
 			let obj = {};
-			if(name === 'name') {
+			if(name === 'name' || name === 'seo') {
 				obj = { ...categoryAttribute,...{[`${name}`]:value }}
 			} else {
 				obj = { ...categoryAttribute,...{[`${name}`]: value.split(',') }}
 			}
+			
+			setAttribute(obj)
+
+		}
+		const handleChangeSelect = (ev,eve) => {
+			
+			let obj = {};
+			obj = { ...categoryAttribute,...{[`${eve.name}`]: ev.map(_ => _.value)  }}
 			
 			setAttribute(obj)
 
@@ -236,6 +252,27 @@ const Category = () => {
 									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="channel" value={categoryAttribute?.channel}  onChange={ handleChange } />
 								</div>
 							</div>
+							<div className="col-md-6 col-sm-12">
+								<div className="form-group">
+									<label>Category Seo</label>
+									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="seo" value={categoryAttribute?.seo}  onChange={ handleChange } />
+								</div>
+							</div>
+							<div className="col-md-6 col-sm-12">
+								<div className="form-group">
+									<label>Operating System</label>
+									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="operatingSystem" value={categoryAttribute?.operatingSystem}  onChange={ handleChange } />
+								</div>
+							</div>
+							<div className="col-md-6 col-sm-12">
+								<div className="form-group">
+									<label>Allowed Filter Keys (comma seprated )</label>
+									<Select options={allowedFilter} isMulti={ true } name="allowedFilterKeys" onChange={handleChangeSelect}/>
+									
+								</div>
+							</div>
+							
+
 						</div>
 						<div className="btn-list">
 								{

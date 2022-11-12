@@ -21,6 +21,11 @@ const InvoiceManagment = React.lazy(() => import('./Screens/InvoiceManagment'));
 const CategoryManagement  = React.lazy(() => import('./Screens/CategoryScreen'));
 const CategoryList  = React.lazy(() => import('./Screens/CategoryListScreen'));
 const ProductScreen = React.lazy(() => import('./Screens/ProductScreen'));
+const ProductList = React.lazy(() => import('./Screens/ProductList'));
+
+const ServiceList = React.lazy(() => import('./Screens/ServicesListScreen'));
+// const ProductList = React.lazy(() => import('./Screens/ProductList'));
+// const ProductList = React.lazy(() => import('./Screens/ProductList'));
 
 
 const App = (props) => {
@@ -44,6 +49,11 @@ const App = (props) => {
 						<Route exact={ true } path='/sell-product' element={ <InvoiceManagment />} /> 
 						<Route exact={ true } path="/category" element={<CategoryManagement />} />
 						<Route exact={ true } path="/product-add" element={<ProductScreen />} />
+						<Route exact={ true } path="/product-list" element={<ProductList />} />
+						<Route exact={ true } path="/services" element={<ServiceList />} />
+						<Route exact={ true } path="/booking" element={<ProductList />} />
+						<Route exact={ true } path="/contacts" element={<ProductList />} />
+						
 
 					</Routes>
 				</BrowserRouter>

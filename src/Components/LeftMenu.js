@@ -54,6 +54,32 @@ const menu = [
 		],
 		key:"INVO0908KLI",
 		id:"product_1"
+	},
+	{
+		mainMenuText: "Customer Query/Service",
+		link:"",
+		isOpen: false,
+		icon:'dw  dw-money',
+		Child:[
+			{
+				mainMenuText: "Service Request",
+				link:"/services",
+				key:"PRO-SERV92239967"
+			},
+			
+			{
+				mainMenuText: "Online Consultant Book",
+				link:"/booking",
+				key:"PRO90I-BOOKINGB78434"
+			},
+			{
+				mainMenuText: "Customer Contact",
+				link:"/contacts",
+				key:"PRO90I-BOOKINGB78434"
+			}
+		],
+		key:"CUSTOMER0908KLI",
+		id:"product_2"
 	}
 ]
 export default menu;

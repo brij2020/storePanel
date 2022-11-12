@@ -1,34 +1,60 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import DefaultContainer from '../Components/DefaultContainer'
-import { createCategory }  from '../store/Slices/createCategory.slice'
+import { createProduct }  from '../store/Slices/productCreate.slice'
 import { updateCategory } from '../store/Slices/updateCategory.slice'
 import { getCategoryDetail } from '../store/Slices/categoryDetail.slice'
+import { getProductDetail } from '../store/Slices/Product.slice';
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getAllCategory } from '../store/Slices/categoryList.slice' 
+import Modal from '../Components/SuccessModal'
+import AlertModal from '../Components/AlertModal'
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated';
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' }
+]
+
+
 
 const Product = () => {
 	const location = useLocation();
+	const [categoryOptions, setCategoryOptions] = useState([]);
+	const [selectedCategoryList, setCategoryList ] = useState([]);
+	const [selectedOption, setSelectedOption] = useState('');
+
 	let queryParams = new URLSearchParams(location.search);
 	let catID =  queryParams.get('edit-id');
-	let isDetailPage =  queryParams.get('detailpage');
+	let isDetailPage =  queryParams.get('Add Product');
+
 	const list = useSelector(s => s.getALlCategoryReducer.list);
-	let detail = useSelector(s => s.CategoryDetailSlice.detail);
+	let detail = useSelector(s => s.productDetailReducer.data);
+	
 	const  naviGate = useNavigate()
 	const navigation = [{id:"23",title:"Home", link:'/'},{id:"231",title:"Category", link:'/category'}];
 	const dispatch = useDispatch()
+	
+	useEffect(() => {
+		if(typeof list !== 'undefined' && Array.isArray(list) && list.length > 0) {
+			 setCategoryOptions(list.map( op_ => ({ label: op_.name, value: op_._id}) ))
+
+		}
+	},[list])
+
 	
 	React.useEffect(() => {
 		dispatch(getAllCategory())
 	},[])
 	if(typeof list !== 'undefined'  && Array.isArray(list) && list.length > 0 && typeof catID !== 'undefined') {
-		detail = list.find(_ => _._id === catID);
+		// detail = list.find(_ => _._id === catID);
 	} 
 	
 
 	useEffect(() => {
 		if(typeof list !== 'undefined'  && Array.isArray(list) && list.length === 0 && typeof catID !== 'undefined') {
-			dispatch(getCategoryDetail(catID))
+			dispatch(getProductDetail(catID))
 		}
 	},[]);
 	if(catID === undefined) {
@@ -38,12 +64,20 @@ const Product = () => {
 
 	const formUI = () => {
 
+		const [categoryAttribute, setAttribute ]  = React.useState({name:'',brand:''});
+		const [image, setImage] = useState('');
+		const [brand, setBrand] = useState([]);
+		const [isOpen, setOpen] = useState(false);
+		const [alertError, setAlertError] = useState(false)
+		const [buttonText, setButtonText] = React.useState('Add Product');
+		const [ msg, setMsg ] = useState('')
+		const myRef = useRef('')
 		useEffect(() => {
 			if(detail && Object.keys(detail).length > 0 ) {
 				let keys = Object.keys(detail);
 				let formObj = {};
 				keys.map(key => {
-					if(Array.isArray(key)) {
+					if(Array.isArray(detail[key])) {
 						formObj[key] = detail[key].join(',')
 					} else {
 						formObj[key] = detail[key]
@@ -51,26 +85,37 @@ const Product = () => {
 				})
 				setButtonText('Update Category')
 				setAttribute(formObj)
+				if(list && Array.isArray(list)) {
+					const matchedCat = list.find( _ => _._id === detail.parentCategory);
+					console.log("detail",matchedCat);
+					setCategoryList(matchedCat)
+					setSelectedOption({ value:matchedCat._id,label: matchedCat.name})
+				}
+				
 			} else {
 				setAttribute({})
 			}
 			
 		},[detail])
-		const [categoryAttribute, setAttribute ]  = React.useState({name:'',brand:''});
-		const [buttonText, setButtonText] = React.useState('Create Category')
-		const handleChange = ({target:{ name, value}}) => {
+		
+
+		const handleChange = (ev,eve) => {
+			setBrand(ev)
 			let obj = {};
-			if(name === 'name') {
-				obj = { ...categoryAttribute,...{[`${name}`]:value }}
-			} else {
-				obj = { ...categoryAttribute,...{[`${name}`]: value.split(',') }}
-			}
+			console.log(ev,'tetstvalue')
+			obj = { ...categoryAttribute,...{[`${eve.name}`]: ev.map(_ => _.value)  }}
 			
 			setAttribute(obj)
 
 		}
+		const handleChangeText = ({target:{ name, value}}) => {
+			let obj = {};
+			obj = { ...categoryAttribute,...{[`${name}`]:value }}
+			setAttribute(obj)
+		}
 		const handleSubmitButton = async e => {
-			e.preventDefault()
+			e.preventDefault();
+
 			if(typeof catID !== 'undefined' && catID !== null) {
 				const p = await dispatch(updateCategory({catObject:categoryAttribute,id:catID}));
 				if(typeof p.payload !== 'undefined' && p.payload.status) {
@@ -80,75 +125,134 @@ const Product = () => {
 				}
 				return
 			}
-			dispatch(createCategory(categoryAttribute))
+			if(  selectedCategoryList && selectedCategoryList._id ) {
+				categoryAttribute['image'] = image;
+				categoryAttribute['parentCategory'] = selectedCategoryList._id 
+			}
+			let formData = new FormData();
+			
+			for( const key in categoryAttribute) {
+
+				formData.append(key, Array.isArray(categoryAttribute[key]) ? JSON.stringify(categoryAttribute[key]):categoryAttribute[key]) 
+			}
+			try {
+				const response = await dispatch(createProduct(formData));
+				console.log('product screen', response)
+				if(response?.payload?.status) {
+					setOpen(true)
+				} else {
+					setAlertError(true);
+					setMsg(response.error.message)
+				}
+			} catch(e){
+				setAlertError(false)
+				setMsg('please try again')
+			}
+			
+
 		}
 		const handleListPage = () => {
 			naviGate('/category-list')
 		}
-		console.log('logo',list)
 		
-		return (<form>
+		const handleCategoryChange = ({ value,label}) => {
+
+			setSelectedOption({ value,label})
+
+			if( Array.isArray(list)) {
+				const objectSelected = list.find(_ => _._id === value );
+				setCategoryList(objectSelected)
+			} 
+			return true
+			
+		}
+		
+		const customStyles = {
+			  option: (provided, state) => ({
+			    ...provided,
+			    borderBottom: '1px dotted pink',
+			    color: state.isSelected ? 'red' : 'blue',
+			    padding: 20,
+			  }),
+			  input:  (provided, state) => ({
+			    ...provided,
+			    margin: 10,
+			  }),
+
+			  
+			}
+		const handleImage = fileEvent => {
+			// console.log('file event ', fileEvent)
+			const FILE_REGX = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i;
+			const { type } = fileEvent.target.files[0] ?? undefined ;
+			if( typeof type !== 'undefined' ) {
+				let fileExtension =  '.' + (type.split('/').pop());
+				console.log('fileExtension', fileExtension)
+				if(FILE_REGX.test(fileExtension)) {
+					setImage(fileEvent.target.files[0])
+				} else {
+					alert('File format not allowed')
+				}
+			}
+			console.log('file type', type)
+		}
+
+		 const changeModalState = async (deleteOrNot) => {
+        setOpen(!isOpen);
+        setAttribute({name:'',brand:''});
+        setMsg('');
+    }
+    const changeModalStateAlert = () => {
+    	setAlertError(false);
+    	setMsg('')
+    }
+		return (
+			<>
+
+			<form>
+			
 				<div className="row">
+				
 					<div className="col-md-6 col-sm-12">
-							<label>Single Select</label>
-							<select class="custom-select2 form-control" name="state" >
-								<option value="AZ">Arizona</option>
-								<option value="CO">Colorado</option>
-								<option value="ID">Idaho</option>
-								<option value="MT">Montana</option>
-								<option value="NE">Nebraska</option>
-								<option value="NM">New Mexico</option>
-								<option value="ND">North Dakota</option>
-								<option value="UT">Utah</option>
-								<option value="WY">Wyoming</option>
-							</select>
+							<label>Select Category</label>
+							<Select options={categoryOptions} value={selectedOption} isMulti={ false }  onChange={ handleCategoryChange }  style={customStyles}/>
 						
 						</div>
 							<div className="col-md-6 col-sm-12">
 								<label>Brand Name</label>
+								<Select options={  selectedCategoryList['brand'] && selectedCategoryList['brand'].map(_ => ({ value: _, label: _ })) } isMulti={ true }  name="brand" onChange={handleChange} />
 								
-									<select class="selectpicker form-control"  data-style="btn-outline-secondary" multiple key={'4u'}>
-									<option>Mustard</option>
-									<option>Ketchup</option>
-									<option>Relish</option>
-									<option>Plain</option>
-									<option>Steamed</option>
-									<option>Toasted</option>
-								</select>
-								
-
 							</div>
 						</div>
 						<div className="row">
 							<div className="col-md-6 col-sm-12">
-								<label>Brand Name</label>
-								<select class="selectpicker form-control"  data-style="btn-outline-secondary" multiple  key={'4u'}>
-									<option>Mustard</option>
-									<option>Ketchup</option>
-									<option>Relish</option>
-									<option>Plain</option>
-									<option>Steamed</option>
-									<option>Toasted</option>
-								</select>
+								<label>Select Product Type</label>
+								
+								<Select options={  selectedCategoryList['ptype'] && selectedCategoryList['ptype'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="ptype" onChange={handleChange} />
+									
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Series</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="series" value={categoryAttribute?.series}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['series'] && selectedCategoryList['series'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="series" onChange={handleChange}/>
+
 								</div>
 							</div>
 						</div>
 						<div className="row">
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
-									<label>Chipset</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="chipset" value={categoryAttribute?.chipset}  onChange={ handleChange } />
+									<label>Chipset</label> 
+									
+									<Select options={  selectedCategoryList['chipset'] && selectedCategoryList['chipset'].map(_ => ({ value: _, label: _ })) } isMulti={ true }  onChange={handleChange}/>
+
 								</div>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Generation</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="generation" value={categoryAttribute?.generation}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['generation'] && selectedCategoryList['generation'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="generation" onChange={handleChange} />
+
 								</div>
 							</div>
 						</div>
@@ -156,13 +260,14 @@ const Product = () => {
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Socket Type</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="socketType" value={categoryAttribute?.socketType}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['socketType'] && selectedCategoryList['socketType'].map(_ => ({ value: _, label: _ })) } isMulti={ true }  name="socketType" onChange={handleChange}/>
 								</div>
 							</div>
+
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Screen Size</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="screenSize" value={categoryAttribute?.screenSize}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['screenSize'] && selectedCategoryList['screenSize'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="screenSize"  onChange={handleChange}/>
 								</div>
 							</div>
 						</div>
@@ -170,13 +275,13 @@ const Product = () => {
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Memory Supprot</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="memorySupprot" value={categoryAttribute?.memorySupprot}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['memorySupprot'] && selectedCategoryList['memorySupprot'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="memorySupprot" onChange={handleChange}/>
 								</div>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Memory Type</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="memoryType" value={categoryAttribute?.memoryType}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['memoryType'] && selectedCategoryList['memoryType'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="memoryType" onChange={handleChange}/>
 								</div>
 							</div>
 						</div>
@@ -184,13 +289,15 @@ const Product = () => {
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Speed</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="speed" value={categoryAttribute?.speed}  onChange={ handleChange } />
+									 <Select options={  selectedCategoryList['speed'] && selectedCategoryList['speed'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="speed" onChange={handleChange}/>
+
 								</div>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
-									<label>Capacity</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="capacity" value={categoryAttribute?.capacity}  onChange={ handleChange } />
+									<label>Memory Capacity </label>
+									 <Select options={  selectedCategoryList['capacity'] && selectedCategoryList['capacity'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="capacity" onChange={handleChange}/>
+
 								</div>
 							</div>
 						</div>
@@ -198,13 +305,15 @@ const Product = () => {
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Form Factor</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="formFactor" value={categoryAttribute?.formFactor}  onChange={ handleChange } />
+
+									<Select options={  selectedCategoryList['formFactor'] && selectedCategoryList['formFactor'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="formFactor" onChange={handleChange} />
 								</div>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Rpm</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="rpm" value={categoryAttribute?.rpm}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['rpm'] && selectedCategoryList['rpm'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="rpm" onChange={handleChange} />
+
 								</div>
 							</div>
 						</div>
@@ -212,13 +321,15 @@ const Product = () => {
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Watts</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="watts" value={categoryAttribute?.watts}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['watts'] && selectedCategoryList['watts'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="watts" onChange={handleChange} />
+
 								</div>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Voltage Range</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="voltageRange" value={categoryAttribute?.voltageRange}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['voltageRange'] && selectedCategoryList['voltageRange'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="voltageRange" onChange={handleChange}/>
+
 								</div>
 							</div>
 						</div>
@@ -226,13 +337,14 @@ const Product = () => {
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Tracking Method</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="trackinMethod" value={categoryAttribute?.trackinMethod}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['trackinMethod'] && selectedCategoryList['trackinMethod'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="trackinMethod" onChange={handleChange}/>
+
 								</div>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Resolution</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="resolution" value={categoryAttribute?.resolution}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['resolution'] && selectedCategoryList['resolution'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="resolution" onChange={handleChange}/>
 								</div>
 							</div>
 						</div>
@@ -240,30 +352,86 @@ const Product = () => {
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Color</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="color" value={categoryAttribute?.color}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['color'] && selectedCategoryList['color'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="color" onChange={handleChange}/>
+
 								</div>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Style</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="style" value={categoryAttribute?.style}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['style'] && selectedCategoryList['style'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="style" onChange={handleChange}/>
+
 								</div>
 							</div>
 						</div>
+
 						<div className="row">
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Refresh Rate</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false } className="form-control" name="refreshRate" value={categoryAttribute?.refreshRate}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['refreshRate'] && selectedCategoryList['refreshRate'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="refreshRate" onChange={handleChange}/>
 								</div>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="form-group">
 									<label>Channel</label>
-									<input type="text" disabled={isDetailPage === 'true' ? true: false }  className="form-control" name="channel" value={categoryAttribute?.channel}  onChange={ handleChange } />
+									<Select options={  selectedCategoryList['channel'] && selectedCategoryList['channel'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="channel" onChange={handleChange}/>
 								</div>
 							</div>
 						</div>
+						<div className="row">
+							<div className="col-md-6 col-sm-12">
+									<div className="form-group">
+										<label>Operating System</label>
+										<Select options={  selectedCategoryList['operatingSystem'] && selectedCategoryList['operatingSystem'].map(_ => ({ value: _, label: _ })) } isMulti={ true } name="operatingSystem" onChange={handleChange}/>
+									</div>
+								</div>
+						</div>
+						<h2 style={{ "text-align": "center",
+						    "width": "100%",
+						    "color": "#aaa"}}> 
+						   Commercial Information</h2>
+						<div className="row" style={{
+							borderTop: "3px dotted rgb(16 11 11 / 46%)",
+    						margin: "10px"
+						}}>
+							
+
+						</div>
+						<div className="row">
+								<div className="col-md-6 col-sm-12">
+									<div className="form-group">
+										<label>Title</label>
+										<input type="text" name="title"  className="form-control" onChange={ handleChangeText }  />
+									</div>
+								</div>
+								<div className="col-md-6 col-sm-12">
+									<div className="form-group">
+										<label>Description</label>
+										<input type="text" name="description"  className="form-control" onChange={ handleChangeText } />
+
+									</div>
+								</div>
+								<div className="col-md-6 col-sm-12">
+									<div className="form-group">
+										<label>Price</label>
+										<input type="text" name="price"  className="form-control" onChange={ handleChangeText }  />
+									</div>
+								</div>
+								<div className="col-md-6 col-sm-12">
+									<div className="form-group">
+										<label>In Stock</label>
+										<input type="text" name="countInStock"  className="form-control" onChange={ handleChangeText }  />
+									</div>
+								</div>
+								<div className="col-md-6 col-sm-12">
+									<div className="form-group">
+										<label>Product Image </label>
+										<input type="file" name="image"   className="form-control"  onChange={ handleImage }/>
+						
+									</div>
+								</div>
+							</div>
 						<div className="btn-list">
 								{
 									isDetailPage === 'true' ? ( 
@@ -275,9 +443,18 @@ const Product = () => {
 								
 								
 						</div>
-			</form>)
+						{
+							isOpen ? (<Modal isOpen={isOpen} changeModalState = { changeModalState }
+            	message={msg} />) : null
+						} 
+						{ alertError ? 
+							<AlertModal isOpen={alertError} changeModalState = { changeModalStateAlert }
+            	message={msg} /> : null
+						} 
+						
+			</form></>)
 	}
-	return (<DefaultContainer navigation={navigation} render={formUI} key={new Date()}/>)
+	return (<DefaultContainer navigation={navigation} render={formUI} />)
 
 }
 export default Product;

@@ -7,10 +7,10 @@ const Modal  = (props) => {
         message= 'Are you sure you want to continue?',
         options=[{value:"YES"},{value:"NO"}],
         isOpen,
-        changeModalState
-
+        changeModalState,
+        identifier=null
     } = props;
-    console.log('pors',props)
+
     const openButtonRef = React.useRef(null);
     React.useEffect(() => {
         if(isOpen) {
@@ -19,10 +19,10 @@ const Modal  = (props) => {
         window.scrollTo(0, 0);
     },[isOpen])
     const handleNoButton = () => {
-        changeModalState(false)
+        changeModalState(false,identifier)
     }
    const  handleYesButton = () => {
-        changeModalState(true)
+        changeModalState(true,identifier)
     }
     return(<>
         <div class="col-md-4 col-sm-12 mb-30" style={{ opacity:  -1}}>
