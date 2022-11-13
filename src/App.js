@@ -26,7 +26,7 @@ const ProductList = React.lazy(() => import('./Screens/ProductList'));
 
 const ServiceList = React.lazy(() => import('./Screens/ServicesListScreen'));
 const OrderList = React.lazy(() => import('./Screens/OrderList'));
-// const ProductList = React.lazy(() => import('./Screens/ProductList'));
+const ContactUsListScreen = React.lazy(() => import('./Screens/ContactUsListScreen'));
 
 
 const App = (props) => {
@@ -54,7 +54,8 @@ const App = (props) => {
 						<Route exact={ true } path="/services" element={<ServiceList />} />
 						<Route exact={ true } path="/booking" element={<ProductList />} />
 						<Route exact={ true } path="/orders" element={<OrderList />} />
-						<Route exact={ true } path="/contacts" element={<ProductList />} />
+						<Route exact={ true } path="/contacts" element={<ContactUsListScreen />} />
+						
 						
 
 					</Routes>

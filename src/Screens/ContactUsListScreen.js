@@ -1,7 +1,7 @@
 import React,{ useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCategory, removeCategoryList } from '../store/Slices/categoryList.slice';
-import { fetchAllServicesRequest, changeServicesStatus } from '../store/Slices/Services.Slice';
+import { fetchAllContactUsRequest, changeServicesStatus } from '../store/Slices/Contact.Slice';
 import { deleteCategoryAction } from '../store/Slices/categoryDelete.slice'
 import { useNavigate } from "react-router-dom";
 import Table from '../Components/Table'
@@ -9,9 +9,9 @@ import Modal from '../Components/Modal'
 import ModalXhr from '../Components/XhrModal'
 
 
-const ServiceList  = () => {
+const ContactUsList  = () => {
 	const dispatch = useDispatch();
-	const { list=[], pages = 1 } = useSelector(s => s.serviceListReducer) ?? {list:[], pages : 1};
+	const { list=[], pages = 1 } = useSelector(s => s.contactUsListReducer) ?? {list:[], pages : 1};
     const [isOpen, setOpen] = useState(false);
     const [isOpenServiceState, setOpenServiceState] = useState(false);
     const [ messageModal, setMessageModal] = useState({id:"", msg:""})
@@ -19,9 +19,9 @@ const ServiceList  = () => {
     const [perPage, setPerPage] = useState(10)
     const [catId, setCatID] = useState('');
     
-	useEffect(() => {
-		dispatch(fetchAllServicesRequest({ pageno: pageNo, perpage:perPage}))
-	},[])
+	// useEffect(() => {
+	// 	dispatch(fetchAllContactUsRequest({ pageno: pageNo, perpage:perPage}))
+	// },[])
     useEffect(() => {
         window.scrollTo(0, 0);
     },[isOpen])
@@ -31,7 +31,7 @@ const ServiceList  = () => {
         }
 
     React.useEffect(() => {
-        dispatch(fetchAllServicesRequest({ pageno: pageNo, perpage:perPage}));
+        dispatch(fetchAllContactUsRequest({ pageno: pageNo, perpage:perPage}));
          window.scrollTo(0, 0);
 
     },[pageNo])
@@ -41,7 +41,7 @@ const ServiceList  = () => {
 	const tableHeader = [	
 		"First Name",
         'Last Name','Email','Phone Number',
-        'Address','City','State','Country','Service','Client Type','Nature Of Bussiness','','','',
+        'City','State','','','',
         "Action"
     ]
     const editCategory = e => {
@@ -90,13 +90,9 @@ const ServiceList  = () => {
             <td>{td?.LastName}</td>
             <td>{td?.Email}</td>
             <td>{td?.Phone}</td>
-            <td>{td?.Address}</td>
             <td>{td?.City}</td>
             <td>{td?.State}</td>
-            <td>{td?.Country}</td>
-            <td>{td?.Service}</td>
-            <td>{td?.Client}</td>
-            <td>{td?.NOBussiness}</td>
+            <td>{ td?.message }</td>
             <td>&nbsp;&nbsp;&nbsp;</td>
             <td>&nbsp;&nbsp;&nbsp;</td>
             <td>&nbsp;&nbsp;&nbsp;</td>
@@ -132,4 +128,4 @@ const ServiceList  = () => {
        
     </div>
 }
-export default ServiceList
+export default ContactUsList

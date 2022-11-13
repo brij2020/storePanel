@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { API_BASE_URL, API_END_POINT } from '../../REST_API_END_POINT'
 
- export const fetchAllServicesRequest = createAsyncThunk(
- 	'get-list-service-request',
+ export const fetchAllContactUsRequest = createAsyncThunk(
+ 	'get-list-contact-us-request',
  	async({ pageno=1, perpage=10}={ pageno: 1,perpage: 10}) => {
 		try {
 			const response = await axios.get(`${API_BASE_URL}/${API_END_POINT.GET_ALL_SERVICES_REQUESTED}?perpage=${perpage}&pageno=${pageno}`);
@@ -22,26 +22,26 @@ let initialState = {
 	list: []
 }
 
-const ServiceSlice = createSlice({
-	name: 'service-request',
+const ContactUsSlice = createSlice({
+	name: 'contact-us-request',
 	initialState,
 	reducers:{
 
 	},
 	extraReducers: builder => {
 		builder
-		.addCase(fetchAllServicesRequest.pending, (state,{ payload}) => {
+		.addCase(fetchAllContactUsRequest.pending, (state,{ payload}) => {
 			state.loader = true;
 			
 		})
 		builder
-		.addCase(fetchAllServicesRequest.fulfilled, (state,{payload})=> {
+		.addCase(fetchAllContactUsRequest.fulfilled, (state,{payload})=> {
 			state.loader = false;
 			state.list = JSON.parse(payload).data.list
 			state.pages = JSON.parse(payload).data.page
 		})
 		builder
-		.addCase(fetchAllServicesRequest.rejected, (state,{payload})=> {
+		.addCase(fetchAllContactUsRequest.rejected, (state,{payload})=> {
 			state.loader = false;
 			state.list = initialState.list
 		})
@@ -102,5 +102,5 @@ const ServiceStateSlice = createSlice({
 
 
 const serviceStatusChangeReducer =  ServiceStateSlice.reducer
-const serviceListReducer =  ServiceSlice.reducer
-export { serviceStatusChangeReducer, serviceListReducer}
+const contactUsListReducer =  ContactUsSlice.reducer
+export { serviceStatusChangeReducer, contactUsListReducer}

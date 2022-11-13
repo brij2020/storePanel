@@ -1,9 +1,9 @@
 // const API_BASE_URL = 'http://localhost:3001';
 // const API_BASE_URL = 'https://store-pi.onrender.com'
 // const API_BASE_URL = 'https://web-store-pan.herokuapp.com'
-// const API_BASE_URL = 'http://localhost:8080'
+const API_BASE_URL = 'http://localhost:8080'
 // const API_BASE_URL = 'https://electro-backend.onrender.com'
-const API_BASE_URL = 'https://ecom-electronic.onrender.com'
+// const API_BASE_URL = 'https://ecom-electronic.onrender.com'
 
 const API_KEY = '';
 const API_END_POINT = {
