@@ -70,7 +70,7 @@ const menu = [
 			{
 				mainMenuText: "Online Consultant Book",
 				link:"/booking",
-				key:"PRO90I-BOOKINGB78434"
+				key:"PRO90I-BOOKINGB7846"
 			},
 			{
 				mainMenuText: "Customer Contact",
@@ -80,6 +80,21 @@ const menu = [
 		],
 		key:"CUSTOMER0908KLI",
 		id:"product_2"
+	},
+	{
+		mainMenuText: "Orders",
+		link:"",
+		isOpen: false,
+		icon:'dw  dw-money',
+		Child:[
+			{
+				mainMenuText: "Orders",
+				link:"/orders",
+				key:"ORD-SERV92239967"
+			}
+		],
+		key:"ORDERS1908KLI",
+		id:"order_2"
 	}
 ]
 export default menu;

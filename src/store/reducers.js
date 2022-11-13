@@ -13,6 +13,8 @@ import updateCatgorySlice  from "./Slices/categoryDetail.slice"
 import deleteCatgorySlice from "./Slices/categoryDelete.slice"
 import { allProductSlice, productDetailReducer } from "./Slices/Product.slice";
 import { serviceStatusChangeReducer, serviceListReducer} from "./Slices/Services.Slice";
+import { ordersListReducer} from "./Slices/Order.Slice";
+
 const combinedReducers = {
 	testReducer, 
 	authReducer,
@@ -29,7 +31,8 @@ const combinedReducers = {
 	allProductSlice,
 	productDetailReducer,
 	serviceStatusChangeReducer,
-	serviceListReducer
+	serviceListReducer,
+	ordersListReducer
 }
 
 export default combinedReducers

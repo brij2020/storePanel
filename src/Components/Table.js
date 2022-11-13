@@ -1,9 +1,11 @@
 import React from 'react';
-
+import Paggination from './Paggination'
 const Table = (props) => {
 	let headers = props.header;
 	let head = props.head ?? 'Listing ';
-	let subHead = props.subHead ?? 'all listing of all data'
+	let subHead = props.subHead ?? 'all listing of all data';
+	let totalPage = props.pages ?? 1;
+	let onClick = props.onClick ?? (() => {} )
 	return (<>
 		<div class="pd-20 card-box mb-30">
 					<div class="clearfix mb-20">
@@ -58,6 +60,7 @@ const Table = (props) => {
 						</div>
 					</div>
 				</div>
+				<Paggination totalPage={totalPage} onClick={onClick} page={props?.currentPage}/>
 				</>)
 }
 export default Table
