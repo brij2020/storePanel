@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Table from '../Components/Table'
 import Modal from '../Components/Modal'
 import ModalXhr from '../Components/XhrModal'
-
+const dayjs = require('dayjs')
 
 const OrderList  = () => {
 	const dispatch = useDispatch();
@@ -90,7 +90,7 @@ const OrderList  = () => {
             <td>{td?.shippingPrice}</td>
             <td class={td?.isPaid ? 'okCls': 'failCls'} >{td?.isPaid ? 'Paid': 'Not Paid'}</td>
             <td>{td?.isDelivered}</td>
-            <td>{td?.updatedAt}</td>
+            <td>{dayjs(`${td?.updatedAt}`).format('DD, MMM, YYYY hh:mm A')}</td>
             <td>&nbsp;&nbsp;&nbsp;</td>
             <td>&nbsp;&nbsp;&nbsp;</td>
             <td>&nbsp;&nbsp;&nbsp;</td>
