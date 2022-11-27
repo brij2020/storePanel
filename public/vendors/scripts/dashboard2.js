@@ -1,8 +1,9 @@
 $(".dial1").knob();
-$({animatedVal: 0}).animate({animatedVal: 80}, {
+$({animatedVal: 0}).animate({animatedVal: 180}, {
 	duration: 3000,
 	easing: "swing",
 	step: function() {
+		console.log('this.animatedVal',this.animatedVal)
 		$(".dial1").val(Math.ceil(this.animatedVal)).trigger("change");
 	}
 });
@@ -17,7 +18,7 @@ $({animatedVal: 0}).animate({animatedVal: 70}, {
 });
 
 $(".dial3").knob();
-$({animatedVal: 0}).animate({animatedVal: 90}, {
+$({animatedVal: 0}).animate({animatedVal: 190}, {
 	duration: 3000,
 	easing: "swing",
 	step: function() {

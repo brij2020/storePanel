@@ -6,7 +6,7 @@ import { API_BASE_URL, API_END_POINT } from '../../REST_API_END_POINT'
  	'get-list-contact-us-request',
  	async({ pageno=1, perpage=10}={ pageno: 1,perpage: 10}) => {
 		try {
-			const response = await axios.get(`${API_BASE_URL}/${API_END_POINT.GET_ALL_SERVICES_REQUESTED}?perpage=${perpage}&pageno=${pageno}`);
+			const response = await axios.get(`${API_BASE_URL}/${API_END_POINT.GET_ALL_CONTACT_US_LIST}?perpage=${perpage}&pageno=${pageno}`);
 			if(response && response.data && response.data.status) {
 				return JSON.stringify(response)
 			} else {

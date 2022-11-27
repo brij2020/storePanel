@@ -19,16 +19,31 @@ const authState = (flag) => {
 	} catch (e) {
 
 	}
-	console.log("decodedUser",decodedUser)
-
+	
 	if(storeUser && Object.keys(storeUser.user).length > 0 || Object.keys(decodedUser).length > 0 ) {
 		isLogin  =  true
 	}
 	return [isLogin, () =>  {} ]
+}
+const useToken = (flag) => {
+	let isLogin = flag;
+	const storeUser = useSelector(state => state.userReducer);
+	const dispatch =  useDispatch()
+	const token = localStorage.getItem('token');
+	let  decodedUser = {};
+	try {
+		if(token) {
+		  decodedUser = jwt_decode(token);
+		  dispatch(setUser({ token: token }))
+		}
+	} catch (e) {
+
+	}
+	return [token, () =>  {} ]
 }
 function useQuery() {
   const { search } = useLocation();
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-export { authState, useQuery };
+export { authState, useQuery, useToken };

@@ -1,43 +1,51 @@
-import React,{ useState } from 'react';
+import React,{ useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sayHello } from '../store/Slices/auth.slice';
 import { plus,min, mul } from '../store/Slices/counter.slice';
+import { getDashboard }  from '../store/Slices/dashboard.slice'
 import { loginAction } from '../store/Slices/login.slice'
 import Loader from '../Components/Loader'
 import { FormValidation } from '../utill/FormValidation'
 import  history  from '../history'
+import {  useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = (props) => {
 	const dispatch = useDispatch();
 
 	const [username, setUserName] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
-	
 	const loader = useSelector(store => store.userReducer?.loader) ?? false;
+	console.log('props', props)
 	const handleLogin = async (e) => {
 		e.preventDefault()
 		
 		const errorState = FormValidation({email: username, password:password});
-		console.log('hit web services', errorState)
+		
 		if(Object.values(errorState).filter(_=>_.msg !== '').length > 0) {
 			setError(errorState);
 			return
 		}
-console.log('hit web services')
-		const userResponse  = await dispatch(loginAction({ 
+
+		const userResponse  = await dispatch(loginAction(JSON.stringify({ 
 		    "email":username,
 		    "password": password
-		}));
-		history.push('/')
-		if(userResponse.data.status) {
-			history.push('/')
+		})));
+		
+		if(userResponse?.payload?.user_token) {
+			// dispatch(getDashboard(userResponse?.payload))
+			// setTimeout(() => history.push('/dashboard'), 300)
+			window.location.href = '/dashboard'
+		} else {
+			window.location.href = "/"
 		}
 	}
+	
 	const handleUserName = e => setUserName(e.target.value)
 	const handlePassword = e => setPassword(e.target.value)
 	
 	return(<>
+		
 			<div className="login-header box-shadow">
 			{ loader ? <Loader /> : null }
 			<div className="container-fluid d-flex justify-content-between align-items-center">
@@ -129,6 +137,7 @@ console.log('hit web services')
 			</div>
 		</div>
 	</div>
+	
 </>)
 }
 export default Login;

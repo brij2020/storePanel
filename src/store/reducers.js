@@ -15,6 +15,7 @@ import { allProductSlice, productDetailReducer } from "./Slices/Product.slice";
 import { serviceStatusChangeReducer, serviceListReducer} from "./Slices/Services.Slice";
 import { ordersListReducer } from "./Slices/Order.Slice";
 import { contactUsListReducer } from "./Slices/Contact.Slice"
+import dashboardReducer  from "./Slices/dashboard.slice"
 const combinedReducers = {
 	testReducer, 
 	authReducer,
@@ -33,7 +34,8 @@ const combinedReducers = {
 	serviceStatusChangeReducer,
 	serviceListReducer,
 	ordersListReducer,
-	contactUsListReducer
+	contactUsListReducer,
+	dashboardReducer
 }
 
 export default combinedReducers

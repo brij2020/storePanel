@@ -6,9 +6,9 @@ export const loginAction = createAsyncThunk(
 	async (data) => {
 		console.log('data', data )
 		
-		const response  = await axios.post(`${API_BASE_URL}/${API_END_POINT.LOGIN}`, data)
-		console.log('response', response)
-		return response;
+		const response  = await axios.post(`${API_BASE_URL}/${API_END_POINT.LOGIN}`, JSON.parse(data))
+		console.log('response', response.data)
+		return response.data;
 
 	}
 )
@@ -36,10 +36,9 @@ const userSilce = createSlice({
 		})
 		builder
 		.addCase(loginAction.fulfilled, (state,{ payload }) => {
-			console.log('payload', payload)
 			state.loader = false;
-			state.user = payload.data.user_token.token
-			setLocalUser(payload.data.user_token.token)
+			state.user = JSON.stringify(payload.user_token.token)
+			setLocalUser(payload.user_token.token)
 		})
 		builder
 		.addCase(loginAction.rejected,(state,action) => {

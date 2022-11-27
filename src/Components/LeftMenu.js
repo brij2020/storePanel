@@ -1,13 +1,13 @@
 const menu = [
 	{
 		mainMenuText: "Home",
-		link:"/home",
+		link:"/",
 		isOpen: false,
 		icon:'dw dw-house-1',
 		Child:[
 			{
-				mainMenuText: "Home1",
-				link:"/home1",
+				mainMenuText: "Dashboard",
+				link:"/dashboard",
 				key:"ILOK9099"
 			}
 		],

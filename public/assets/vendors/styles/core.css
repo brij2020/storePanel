@@ -11639,3 +11639,26 @@ Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmai
     position: fixed;
     color: red;
 }
+.progress-box > span {
+  background-color: rgb(255, 255, 255);
+  width: 64px;
+  height: 41px;
+  /* position: absolute; */
+  vertical-align: middle;
+  /* margin-top: 40px; */
+  /* margin-left: -92px; */
+  border: 0px;
+  background: none rgb(255, 255, 255);
+  font: bold 40px Arial;
+  text-align: center;
+  color: rgb(27, 0, 255);
+  padding: 0px;
+  appearance: none;
+}
+.text-red {
+    color: #f51722f0;
+}
+.text-red {
+    color: #f51722f0;
+}
+    
